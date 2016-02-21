@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">SunShine</string>
+    <string name="setting">Setting</string>
+    <string name="refresh">Refresh</string>
+</resources>

@@ -2,4 +2,11 @@
     <string name="app_name">SunShine</string>
     <string name="setting">Setting</string>
     <string name="refresh">Refresh</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="pref_location_key">location</string>
+    <string name="pref_location_name">Enter your city name</string>
+    <string name="pref_location_default">Ha Noi</string>
+    <string name="pref_location_summary">City Name</string>
 </resources>

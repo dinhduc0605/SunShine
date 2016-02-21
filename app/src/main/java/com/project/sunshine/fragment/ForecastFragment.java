@@ -1,5 +1,6 @@
 package com.project.sunshine.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -10,10 +11,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.project.sunshine.R;
+import com.project.sunshine.activity.DetailActivity;
 import com.project.sunshine.model.APIResponse;
 import com.project.sunshine.model.Constant;
 import com.project.sunshine.model.Temperature;
@@ -70,12 +73,20 @@ public class ForecastFragment extends Fragment implements Callback<APIResponse> 
                 forecastWeathers);
         ListView forecastListView = (ListView) rootView.findViewById(R.id.listview_forecast);
         forecastListView.setAdapter(arrayAdapter);
+        forecastListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent detailIntent = new Intent(getActivity(), DetailActivity.class);
+                startActivity(detailIntent);
+
+            }
+        });
         return rootView;
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.forecast_fragment, menu);
+        inflater.inflate(R.menu.forecast_fragment_menu, menu);
     }
 
     @Override

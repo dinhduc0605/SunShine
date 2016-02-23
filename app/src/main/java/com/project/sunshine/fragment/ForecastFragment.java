@@ -1,7 +1,9 @@
 package com.project.sunshine.fragment;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -25,8 +27,6 @@ import com.project.sunshine.utils.LogConfig;
 import com.project.sunshine.utils.OpenWeatherAPI;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import retrofit2.Call;
@@ -40,17 +40,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class ForecastFragment extends Fragment implements Callback<APIResponse> {
     private static final String TAG = "ForecastFragment";
-    String[] fakeData = {
-            "Today - Sunny - 88/63",
-            "Tomorrow - Foggy - 50/24",
-            "Weds - Rainy - 11/34",
-            "Thurs - Sunny - 93/56",
-            "Fri - Cloudy - 60/50",
-            "Sat - Cold - 50/14",
-            "Sun - Hot - 99/100"
-    };
-    List<String> forecastWeathers = new ArrayList<>(Arrays.asList(fakeData));
-    String cityID;
+    SharedPreferences sharedPreferences;
+    String cityName;
     private ArrayAdapter<String> arrayAdapter;
 
     public ForecastFragment() {
@@ -61,16 +52,17 @@ public class ForecastFragment extends Fragment implements Callback<APIResponse> 
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-        arrayAdapter = new ArrayAdapter<>(getActivity(),
+        arrayAdapter = new ArrayAdapter<String>(getActivity(),
                 R.layout.list_item_forecast,
                 R.id.list_item_forecast_textview,
-                forecastWeathers);
+                new ArrayList<String>());
         ListView forecastListView = (ListView) rootView.findViewById(R.id.listview_forecast);
         forecastListView.setAdapter(arrayAdapter);
         forecastListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -124,8 +116,8 @@ public class ForecastFragment extends Fragment implements Callback<APIResponse> 
                 .build();
         OpenWeatherAPI openWeatherAPI = retrofit.create(OpenWeatherAPI.class);
 
-        cityID = "1581129";
-        Call<APIResponse> call = openWeatherAPI.loadCity(cityID);
+        cityName = sharedPreferences.getString(getString(R.string.pref_location_key), getString(R.string.pref_location_default));
+        Call<APIResponse> call = openWeatherAPI.loadCity(cityName);
         call.enqueue(this);
     }
 
@@ -133,15 +125,20 @@ public class ForecastFragment extends Fragment implements Callback<APIResponse> 
         String date;
         String main;
         String temperature;
-//        forecastWeathers.clear();
         arrayAdapter.clear();
         for (int i = 0; i < 7; i++) {
             Temperature temp = response.body().weatherOfDays.get(i).getTemp();
             date = HelperUtil.getReadableDateString(System.currentTimeMillis() + i * TimeUnit.DAYS.toMillis(1));
             main = response.body().weatherOfDays.get(i).getWeathers().get(0).getMain();
-            temperature = HelperUtil.formatMaxMinTemp(temp.getMax(), temp.getMin());
+            temperature = HelperUtil.formatMaxMinTemp(temp.getMax(), temp.getMin(), getActivity());
             arrayAdapter.add(date + " - " + main + " - " + temperature);
         }
         arrayAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        fetchDataFromAPI();
     }
 }

@@ -11,5 +11,5 @@ import retrofit2.http.Query;
  */
 public interface OpenWeatherAPI {
     @GET("/data/2.5/forecast/daily?mode=json&units=metric&cnt=7&appid=5f2dd83b2333c3797bbdce266bb37bde")
-    Call<APIResponse> loadCity(@Query("id") String id);
+    Call<APIResponse> loadCity(@Query("q") String name);
 }

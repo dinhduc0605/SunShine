@@ -12,6 +12,9 @@
     <string name="pref_unit_key">unit</string>
     <string name="pref_unit_label">Unit</string>
     <string name="pref_unit_imperial">imperial</string>
+    <string name="map_location">Map Location</string>
+    <string name="share">Share</string>
+    <string name="transfer_data_detail">data</string>
 
     <!--Array string-->
     <string-array name="pref_unit_entry_values">

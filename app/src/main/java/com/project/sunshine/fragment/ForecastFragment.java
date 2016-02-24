@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.ShareActionProvider;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -16,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.project.sunshine.R;
 import com.project.sunshine.activity.DetailActivity;
@@ -43,6 +46,7 @@ public class ForecastFragment extends Fragment implements Callback<APIResponse> 
     SharedPreferences sharedPreferences;
     String cityName;
     private ArrayAdapter<String> arrayAdapter;
+    public ListView forecastListView;
 
     public ForecastFragment() {
 
@@ -63,12 +67,13 @@ public class ForecastFragment extends Fragment implements Callback<APIResponse> 
                 R.layout.list_item_forecast,
                 R.id.list_item_forecast_textview,
                 new ArrayList<String>());
-        ListView forecastListView = (ListView) rootView.findViewById(R.id.listview_forecast);
+        forecastListView = (ListView) rootView.findViewById(R.id.listview_forecast);
         forecastListView.setAdapter(arrayAdapter);
         forecastListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent detailIntent = new Intent(getActivity(), DetailActivity.class);
+                detailIntent.putExtra(getString(R.string.transfer_data_detail), ((TextView) view).getText().toString());
                 startActivity(detailIntent);
 
             }
@@ -79,6 +84,7 @@ public class ForecastFragment extends Fragment implements Callback<APIResponse> 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.forecast_fragment_menu, menu);
+
     }
 
     @Override

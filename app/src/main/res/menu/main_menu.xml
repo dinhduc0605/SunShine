@@ -7,4 +7,10 @@
         app:showAsAction="never">
 
     </item>
+    <item
+        android:id="@+id/action_open_map"
+        android:title="@string/map_location"
+        app:showAsAction="never">
+
+    </item>
 </menu>
